@@ -5,22 +5,69 @@ import suic.util.FileUtils;
 
 import java.util.List;
 
+import static java.lang.Math.*;
+
 public class Day01 implements Puzzle<Integer> {
 
+    private List<Rotation> rotations;
 
     @Override
     public void parse() {
-        List<String> input = FileUtils.read(getClass().getSimpleName() + "Input.txt");
-        System.out.println(input);
+        rotations = FileUtils.readAsStream(getClass().getSimpleName() + "Input.txt")
+                .map(Rotation::fromLine)
+                .toList();
     }
 
     @Override
     public Integer part1() {
-        return 0;
+        int currentRotation = 50;
+        int hits = 0;
+        for (Rotation rotation : rotations) {
+            int offset = switch (rotation.direction) {
+                case LEFT -> -rotation.value;
+                case RIGHT -> rotation.value;
+            };
+            currentRotation = floorMod(currentRotation + offset, 100);
+            if (currentRotation == 0) {
+                hits++;
+            }
+        }
+
+        return hits;
     }
 
     @Override
     public Integer part2() {
-        return 0;
+        int pos = 50;
+        int hits = 0;
+        for (Rotation rotation : rotations) {
+            int offset = switch (rotation.direction) {
+                case LEFT -> -rotation.value;
+                case RIGHT -> rotation.value;
+            };
+            if (offset > 0) {
+                hits += Math.floorDiv(pos + offset, 100) - Math.floorDiv(pos, 100);
+            } else if (offset < 0) {
+                hits += Math.floorDiv(pos - 1, 100) - Math.floorDiv(pos + offset - 1, 100);
+            }
+            pos += offset;
+        }
+        return hits;
     }
+
+    private record Rotation(Direction direction, int value) {
+
+        public static Rotation fromLine(String line) {
+            return new Rotation(
+                    line.charAt(0) == 'L' ? Direction.LEFT : Direction.RIGHT,
+                    Integer.parseInt(line.substring(1))
+            );
+        }
+
+    }
+
+    private enum Direction {
+        LEFT, RIGHT
+    }
+
 }
