@@ -20,15 +20,15 @@ public class Day01 implements Puzzle<Integer> {
 
     @Override
     public Integer part1() {
-        int currentRotation = 50;
+        int pos = 50;
         int hits = 0;
         for (Rotation rotation : rotations) {
             int offset = switch (rotation.direction) {
                 case LEFT -> -rotation.value;
                 case RIGHT -> rotation.value;
             };
-            currentRotation = floorMod(currentRotation + offset, 100);
-            if (currentRotation == 0) {
+            pos = floorMod(pos + offset, 100);
+            if (pos == 0) {
                 hits++;
             }
         }
