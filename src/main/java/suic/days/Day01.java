@@ -3,6 +3,7 @@ package suic.days;
 import suic.Puzzle;
 import suic.util.FileUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.*;
